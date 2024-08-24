@@ -7,4 +7,6 @@ next-env.d.ts
 next.config.ts
 yarn.lock
 **/components/ui/*
-app/[locale]/globals.css
+app/globals.css
+tailwind.config.ts
+types/index.d.ts
