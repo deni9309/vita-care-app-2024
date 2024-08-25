@@ -84,3 +84,13 @@ export const StatusIcon = {
   pending: '/assets/icons/pending.svg',
   cancelled: '/assets/icons/cancelled.svg',
 }
+
+export enum FormFieldType {
+  INPUT = 'input',
+  CHECKBOX = 'checkbox',
+  TEXTAREA = 'textarea',
+  PHONE_INPUT = 'phoneInput',
+  SELECT = 'select',
+  DATE_PICKER = 'datePicker',
+  SKELETON = 'skeleton',
+}

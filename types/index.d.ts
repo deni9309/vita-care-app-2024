@@ -5,6 +5,23 @@ declare type SearchParamProps = {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
+declare interface CustomFormFieldProps {
+  control: Control<any>
+  fieldType: FormFieldType
+  inputType?: 'text' | 'password' | 'number'
+  name: string
+  label?: string
+  placeholder?: string
+  autocomplete?: React.HTMLInputAutoCompleteAttribute
+  iconSrc?: string
+  iconAlt?: string
+  disabled?: boolean
+  dateFormat?: string
+  showTimeSelect?: boolean
+  children?: React.ReactNode
+  renderSkeleton?: (field: any) => React.ReactNode
+}
+
 declare type Gender = "Male" | "Female" | "Other"
 declare type Status = "pending" | "scheduled" | "cancelled"
 
