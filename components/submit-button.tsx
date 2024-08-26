@@ -3,11 +3,17 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 interface SubmitButtonProps {
-  isLoading: boolean,
-  className?: string,
+  isLoading: boolean
+  className?: string
   type?: 'button' | 'submit' | 'reset'
   children: React.ReactNode
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  variant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link'
 }
 
 export const SubmitButton = ({
@@ -25,17 +31,19 @@ export const SubmitButton = ({
       disabled={isLoading}
     >
       {isLoading ? (
-        <div className='flex items-center gap-4'>
+        <div className="flex items-center gap-4">
           <Image
-            src='/assets/icons/loader.svg'
+            src="/assets/icons/loader.svg"
             width={24}
             height={24}
-            alt='loader'
-            className='animate-spin'
+            alt="loader"
+            className="animate-spin"
           />
           Loading...
         </div>
-      ) : children}
+      ) : (
+        children
+      )}
     </Button>
   )
 }

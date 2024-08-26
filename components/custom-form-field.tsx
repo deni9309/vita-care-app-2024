@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { ControllerRenderProps, FieldValues } from 'react-hook-form'
-import { E164Number } from "libphonenumber-js/core";
+import { E164Number } from 'libphonenumber-js/core'
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
@@ -43,7 +43,7 @@ const RenderField = ({
               alt={iconAlt || name}
               width={24}
               height={24}
-              className='ml-2 mr-2'
+              className="ml-2 mr-2"
             />
           )}
           <FormControl>
@@ -52,7 +52,7 @@ const RenderField = ({
               {...(inputType && { type: inputType })}
               {...(placeholder && { placeholder })}
               autoComplete={autocomplete ?? 'off'}
-              className='shad-input border-0'
+              className="shad-input border-0"
             />
           </FormControl>
         </div>
@@ -61,13 +61,13 @@ const RenderField = ({
       return (
         <FormControl>
           <PhoneInput
-            defaultCountry='BG'
+            defaultCountry="BG"
             value={field.value as E164Number | undefined}
             placeholder={placeholder}
             international
             withCountryCallingCode
             onChange={field.onChange}
-            className='input-phone'
+            className="input-phone"
           />
         </FormControl>
       )
@@ -85,7 +85,7 @@ export const CustomFormField = (props: CustomFormFieldProps) => {
       render={({ field }) => (
         <FormItem className="flex-1">
           {fieldType !== FormFieldType.CHECKBOX && label && (
-            <FormLabel className='shad-input-label'>{label}</FormLabel>
+            <FormLabel className="shad-input-label">{label}</FormLabel>
           )}
           <RenderField field={field} props={props} />
 

@@ -1,17 +1,20 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { UserFormSchema } from '@/schemas/userForm.schema'
+import { createUser } from '@/actions/patient.actions'
+import { FormFieldType } from '@/constants'
 import { Form } from '@/components/ui/form'
 import { CustomFormField } from '@/components/custom-form-field'
-import { FormFieldType } from '@/constants'
 import { SubmitButton } from '@/components/submit-button'
 
 export const PatientForm = () => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof UserFormSchema>>({
@@ -19,8 +22,20 @@ export const PatientForm = () => {
     defaultValues: { name: '', email: '', phone: '' },
   })
 
-  function onSubmit(values: z.infer<typeof UserFormSchema>) {
+  async function onSubmit({ name, email, phone }: z.infer<typeof UserFormSchema>) {
     setIsLoading(true)
+
+    try {
+      const userData = { name, email, phone }
+
+      const user = await createUser(userData)
+    
+      if (user) {
+        router.push(`/patients/${user.$id}/register`)
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -59,9 +74,7 @@ export const PatientForm = () => {
           placeholder="(+359) 879 555 333"
         />
 
-        <SubmitButton isLoading={isLoading}>
-          Get Started
-        </SubmitButton>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   )

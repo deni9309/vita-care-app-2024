@@ -1,10 +1,5 @@
 /* eslint-disable no-unused-vars */
 
-declare type SearchParamProps = {
-  params: { [key: string]: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
 declare interface CustomFormFieldProps {
   control: Control<any>
   fieldType: FormFieldType
@@ -22,6 +17,11 @@ declare interface CustomFormFieldProps {
   renderSkeleton?: (field: any) => React.ReactNode
 }
 
+declare type SearchParamProps = {
+  params: { [key: string]: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
 declare type Gender = "Male" | "Female" | "Other"
 declare type Status = "pending" | "scheduled" | "cancelled"
 
@@ -30,6 +30,7 @@ declare interface CreateUserParams {
   email: string
   phone: string
 }
+
 declare interface User extends CreateUserParams {
   $id: string
 }
@@ -68,6 +69,7 @@ declare type CreateAppointmentParams = {
 declare type UpdateAppointmentParams = {
   appointmentId: string
   userId: string
+  timeZone: string
   appointment: Appointment
   type: string
 }
