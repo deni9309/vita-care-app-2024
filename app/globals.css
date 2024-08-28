@@ -201,7 +201,7 @@
     }
   
     .shad-input {
-      @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+      @apply bg-dark-400 text-gray-300 placeholder:text-dark-600 border-dark-500 h-[44px] focus-visible:ring-0 focus-visible:ring-offset-0 !important;
     }
   
     .shad-input-icon {
@@ -209,7 +209,7 @@
     }
   
     .shad-textArea {
-      @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+      @apply bg-dark-400 text-gray-300 placeholder:text-dark-600 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
     }
   
     .shad-combobox-item {
@@ -221,11 +221,11 @@
     }
   
     .shad-select-trigger {
-      @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-11 focus:ring-0 focus:ring-offset-0 !important;
+      @apply bg-dark-400 text-dark-700 placeholder:text-dark-700 border-dark-500 h-11 focus:ring-0 focus:ring-offset-0 !important;
     }
   
     .shad-select-content {
-      @apply bg-dark-400 border-dark-500 !important;
+      @apply bg-dark-400 border-dark-500 text-gray-300 cursor-pointer !important;
     }
   
     .shad-dialog {
@@ -270,12 +270,12 @@
   
     /* =====  REACT PHONE NUMBER INPUT OVERRIDES */
     .input-phone {
-      @apply mt-2 h-11 rounded-md px-3 text-sm border bg-dark-400 placeholder:text-dark-600 border-dark-500 !important;
+      @apply mt-2 !h-[45px] rounded-md px-3 text-sm border text-gray-300 bg-dark-400 placeholder:text-dark-600 border-dark-500 !important;
     }
   
     /* =====  REACT DATE PICKER OVERRIDES */
     .date-picker {
-      @apply overflow-hidden border-transparent w-full placeholder:text-dark-600 h-11 text-14-medium rounded-md px-3 outline-none !important;
+      @apply overflow-hidden border-transparent w-full placeholder:text-dark-600 h-11 text-14-medium text-gray-300 rounded-md px-3 outline-none !important;
     }
     }
   

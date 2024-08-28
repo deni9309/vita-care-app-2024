@@ -18,6 +18,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { FormFieldType } from '@/constants'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const RenderField = ({
   field,
@@ -31,6 +34,7 @@ const RenderField = ({
     iconSrc,
     iconAlt,
     name,
+    label,
     inputType,
     placeholder,
     autocomplete,
@@ -38,6 +42,7 @@ const RenderField = ({
     dateFormat,
     renderSkeleton,
     children,
+    disabled,
   } = props
 
   switch (fieldType) {
@@ -63,6 +68,17 @@ const RenderField = ({
             />
           </FormControl>
         </div>
+      )
+    case FormFieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+            {...field}
+            placeholder={placeholder ?? 'Type here...'}
+            disabled={disabled}
+            className='shad-textArea'
+          />
+        </FormControl>
       )
     case FormFieldType.PHONE_INPUT:
       return (
@@ -104,16 +120,23 @@ const RenderField = ({
       )
     case FormFieldType.SELECT:
       return (
-        <FormControl>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <SelectTrigger className='shad-select-trigger'>
-              <SelectValue placeholder={placeholder ?? 'Select from the list'} />
-            </SelectTrigger>
-            <SelectContent className='shad-select-content'>
-              {children}
-            </SelectContent>
-          </Select>
-        </FormControl>
+        <Label>
+          <p className="shad-input-label pb-2">{label}</p>
+          <FormControl id={field.name}>
+            <Select
+              name={field.name}
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            >
+              <SelectTrigger className='shad-select-trigger'>
+                <SelectValue placeholder={placeholder ?? 'Select from the list'} />
+              </SelectTrigger>
+              <SelectContent className='shad-select-content'>
+                {children}
+              </SelectContent>
+            </Select>
+          </FormControl>
+        </Label>
       )
     case FormFieldType.SKELETON:
       return renderSkeleton ? (
@@ -121,6 +144,24 @@ const RenderField = ({
           {renderSkeleton(field)}
         </FormControl>
       ) : null
+    case FormFieldType.CHECKBOX:
+      return (
+        <FormControl>
+          <div className='flex items-center gap-4'>
+            <Checkbox
+              id={name}
+              name={name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <Label
+              htmlFor={name}
+              className='checkbox-label'>
+              {label}
+            </Label>
+          </div>
+        </FormControl>
+      )
     default:
       break
   }
@@ -134,9 +175,12 @@ export const CustomFormField = (props: CustomFormFieldProps) => {
       name={name}
       render={({ field }) => (
         <FormItem className="flex-1">
-          {fieldType !== FormFieldType.CHECKBOX && label && (
-            <FormLabel className="shad-input-label">{label}</FormLabel>
-          )}
+          {
+            fieldType !== FormFieldType.CHECKBOX &&
+            fieldType !== FormFieldType.SELECT &&
+            label && (
+              <FormLabel className="shad-input-label">{label}</FormLabel>
+            )}
           <RenderField field={field} props={props} />
 
           <FormMessage className="shad-error" />
