@@ -17,7 +17,12 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { FormFieldType } from '@/constants'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -55,7 +60,7 @@ const RenderField = ({
               alt={iconAlt || name}
               width={24}
               height={24}
-              className="ml-2 mr-2 h-[24px] w-[24px] my-auto"
+              className="my-auto ml-2 mr-2 h-[24px] w-[24px]"
             />
           )}
           <FormControl>
@@ -76,7 +81,7 @@ const RenderField = ({
             {...field}
             placeholder={placeholder ?? 'Type here...'}
             disabled={disabled}
-            className='shad-textArea'
+            className="shad-textArea"
           />
         </FormControl>
       )
@@ -97,13 +102,13 @@ const RenderField = ({
       )
     case FormFieldType.DATE_PICKER:
       return (
-        <div className='flex rounded-md border border-dark-500 bg-dark-400'>
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
           <Image
-            src='/assets/icons/calendar.svg'
+            src="/assets/icons/calendar.svg"
             width={24}
             height={24}
-            alt='calendar'
-            className='ml-2 mr-2 h-[24px] w-[24px] my-auto'
+            alt="calendar"
+            className="my-auto ml-2 mr-2 h-[24px] w-[24px]"
           />
           <FormControl>
             <DatePicker
@@ -112,8 +117,8 @@ const RenderField = ({
               onChange={(date) => field.onChange(date)}
               dateFormat={dateFormat ?? 'MM/dd/yyyy'}
               showTimeSelect={showTimeSelect ?? false}
-              timeInputLabel='Time:'
-              wrapperClassName='date-picker'
+              timeInputLabel="Time:"
+              wrapperClassName="date-picker"
             />
           </FormControl>
         </div>
@@ -128,10 +133,12 @@ const RenderField = ({
               onValueChange={field.onChange}
               defaultValue={field.value}
             >
-              <SelectTrigger className='shad-select-trigger'>
-                <SelectValue placeholder={placeholder ?? 'Select from the list'} />
+              <SelectTrigger className="shad-select-trigger">
+                <SelectValue
+                  placeholder={placeholder ?? 'Select from the list'}
+                />
               </SelectTrigger>
-              <SelectContent className='shad-select-content'>
+              <SelectContent className="shad-select-content">
                 {children}
               </SelectContent>
             </Select>
@@ -140,23 +147,19 @@ const RenderField = ({
       )
     case FormFieldType.SKELETON:
       return renderSkeleton ? (
-        <FormControl>
-          {renderSkeleton(field)}
-        </FormControl>
+        <FormControl>{renderSkeleton(field)}</FormControl>
       ) : null
     case FormFieldType.CHECKBOX:
       return (
         <FormControl>
-          <div className='flex items-center gap-4'>
+          <div className="flex items-center gap-4">
             <Checkbox
               id={name}
               name={name}
               checked={field.value}
               onCheckedChange={field.onChange}
             />
-            <Label
-              htmlFor={name}
-              className='checkbox-label'>
+            <Label htmlFor={name} className="checkbox-label">
               {label}
             </Label>
           </div>
@@ -175,8 +178,7 @@ export const CustomFormField = (props: CustomFormFieldProps) => {
       name={name}
       render={({ field }) => (
         <FormItem className="flex-1">
-          {
-            fieldType !== FormFieldType.CHECKBOX &&
+          {fieldType !== FormFieldType.CHECKBOX &&
             fieldType !== FormFieldType.SELECT &&
             label && (
               <FormLabel className="shad-input-label">{label}</FormLabel>

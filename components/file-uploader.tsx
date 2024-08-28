@@ -6,7 +6,7 @@ import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 type FileUploaderProps = {
-  files: File[] | undefined,
+  files: File[] | undefined
   onChange: (files: File[]) => void
 }
 
@@ -18,33 +18,30 @@ export const FileUploader = ({ files, onChange }: FileUploaderProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
-    <div
-      {...getRootProps()}
-      className='file-upload'
-    >
+    <div {...getRootProps()} className="file-upload">
       <input {...getInputProps()} />
       {files && files?.length > 0 ? (
         <Image
           src={convertFileToUrl(files[0])}
-          alt='uploaded image'
+          alt="uploaded image"
           width={1000}
           height={1000}
-          className='max-h-[400px] overflow-hidden object-cover'
+          className="max-h-[400px] overflow-hidden object-cover"
         />
       ) : (
         <>
           <Image
-            src='/assets/icons/upload.svg'
-            alt='upload placeholder'
+            src="/assets/icons/upload.svg"
+            alt="upload placeholder"
             width={40}
             height={40}
           />
-          <div className='file-upload_label'>
-            <p className='text-14-regular'>
-              <span className='text-green-500'>Click to upload </span>
+          <div className="file-upload_label">
+            <p className="text-14-regular">
+              <span className="text-green-500">Click to upload </span>
               or drag and drop
             </p>
-            <p className='tracking-wide    '>SVG, PNG, JPG or Gif (max 800X400)</p>
+            <p className="tracking-wide">SVG, PNG, JPG or Gif (max 800X400)</p>
           </div>
         </>
       )}

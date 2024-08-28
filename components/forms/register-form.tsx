@@ -7,9 +7,14 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { RegisterFormSchema } from '@/schemas/RegisterForm.schema'
+import { PatientFormSchema } from '@/schemas/patient-form.schema'
 import { createUser } from '@/actions/patient.actions'
-import { Doctors, FormFieldType, GenderOptions, IdentificationTypes } from '@/constants'
+import {
+  Doctors,
+  FormFieldType,
+  GenderOptions,
+  IdentificationTypes,
+} from '@/constants'
 import { Form, FormControl, FormLabel, FormItem } from '@/components/ui/form'
 import { CustomFormField } from '@/components/custom-form-field'
 import { SubmitButton } from '@/components/submit-button'
@@ -22,8 +27,8 @@ export const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof RegisterFormSchema>>({
-    resolver: zodResolver(RegisterFormSchema),
+  const form = useForm<z.infer<typeof PatientFormSchema>>({
+    resolver: zodResolver(PatientFormSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -44,11 +49,15 @@ export const RegisterForm = ({ user }: { user: User }) => {
       pastMedicalHistory: undefined,
       identificationType: undefined,
       identificationNumber: undefined,
-      identificationDocument: undefined
-    }
+      identificationDocument: undefined,
+    },
   })
 
-  async function onSubmit({ name, email, phone }: z.infer<typeof RegisterFormSchema>) {
+  async function onSubmit({
+    name,
+    email,
+    phone,
+  }: z.infer<typeof PatientFormSchema>) {
     setIsLoading(true)
 
     try {
@@ -67,14 +76,17 @@ export const RegisterForm = ({ user }: { user: User }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-12">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex-1 space-y-12"
+      >
         <section className="space-y-4">
           <h1 className="header">Welcome</h1>
           <p className="text-dark-700">Let us know more about yourself.</p>
         </section>
 
         <section className="space-y-6">
-          <div className='mb-9 space-y-1'>
+          <div className="mb-9 space-y-1">
             <h2 className="sub-header">Personal Information</h2>
           </div>
         </section>
@@ -82,13 +94,13 @@ export const RegisterForm = ({ user }: { user: User }) => {
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.INPUT}
-          label='Full Name'
+          label="Full Name"
           name="name"
           placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.INPUT}
@@ -106,7 +118,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             placeholder="(+359) 879 555 333"
           />
         </div>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.DATE_PICKER}
@@ -119,19 +131,19 @@ export const RegisterForm = ({ user }: { user: User }) => {
             name="gender"
             renderSkeleton={(field) => (
               <Label>
-                <span className='shad-input-label'>Gender</span>
+                <span className="shad-input-label">Gender</span>
                 <RadioGroup
                   {...field}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className='flex h-11 mt-2 gap-6 xl:justify-between'
+                  className="mt-2 flex h-11 gap-6 xl:justify-between"
                 >
-                  {GenderOptions.map(option => (
-                    <FormItem key={option} className='radio-group'>
+                  {GenderOptions.map((option) => (
+                    <FormItem key={option} className="radio-group">
                       <FormControl>
                         <RadioGroupItem value={option} />
                       </FormControl>
-                      <FormLabel className='cursor-pointer text-gray-300 !mt-0'>
+                      <FormLabel className="!mt-0 cursor-pointer text-gray-300">
                         {option}
                       </FormLabel>
                     </FormItem>
@@ -141,7 +153,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             )}
           />
         </div>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.INPUT}
@@ -157,7 +169,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             placeholder="Engineer"
           />
         </div>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.INPUT}
@@ -175,7 +187,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
         </div>
 
         <section className="space-y-6">
-          <div className='mb-9 space-y-1'>
+          <div className="mb-9 space-y-1">
             <h2 className="sub-header">Medical Information</h2>
           </div>
         </section>
@@ -187,22 +199,22 @@ export const RegisterForm = ({ user }: { user: User }) => {
           label="Primary Physician"
           placeholder="Select a physician"
         >
-          {Doctors.map(doctor => (
+          {Doctors.map((doctor) => (
             <SelectItem key={doctor.name} value={doctor.name}>
-              <div className='flex items-center gap-2 cursor-pointer'>
+              <div className="flex cursor-pointer items-center gap-2">
                 <Image
                   src={doctor.image}
                   alt={doctor.name}
                   width={32}
                   height={32}
-                  className='rounded-full border border-dark-500'
+                  className="rounded-full border border-dark-500"
                 />
                 <p>{doctor.name}</p>
               </div>
             </SelectItem>
           ))}
         </CustomFormField>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.INPUT}
@@ -218,7 +230,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             placeholder="ABC123456789"
           />
         </div>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.TEXTAREA}
@@ -234,7 +246,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
             placeholder="Ibuprofen 200mg, Paracetamol 500mg"
           />
         </div>
-        <div className='flex flex-col gap-6 xl:flex-row'>
+        <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.TEXTAREA}
@@ -252,7 +264,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
         </div>
 
         <section className="space-y-6">
-          <div className='mb-9 space-y-1'>
+          <div className="mb-9 space-y-1">
             <h2 className="sub-header">Identification and Verification</h2>
           </div>
         </section>
@@ -264,7 +276,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
           label="Identification type"
           placeholder="Select an identification type"
         >
-          {IdentificationTypes.map(type => (
+          {IdentificationTypes.map((type) => (
             <SelectItem key={type} value={type}>
               {type}
             </SelectItem>
@@ -283,14 +295,16 @@ export const RegisterForm = ({ user }: { user: User }) => {
           name="identificationDocument"
           renderSkeleton={(field) => (
             <Label>
-              <p className="shad-input-label mb-2.5">Scanned copy of identification document</p>
+              <p className="shad-input-label mb-2.5">
+                Scanned copy of identification document
+              </p>
               <FileUploader files={field.value} onChange={field.onChange} />
             </Label>
           )}
         />
 
         <section className="space-y-6">
-          <div className='mb-9 space-y-1'>
+          <div className="mb-9 space-y-1">
             <h2 className="sub-header">Consent and Privacy</h2>
           </div>
         </section>
@@ -298,25 +312,23 @@ export const RegisterForm = ({ user }: { user: User }) => {
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.CHECKBOX}
-          name='treatmentConsent'
-          label='I consent to treatment'
+          name="treatmentConsent"
+          label="I consent to treatment"
         />
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.CHECKBOX}
-          name='disclosureConsent'
-          label='I consent to disclosure of information'
+          name="disclosureConsent"
+          label="I consent to disclosure of information"
         />
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.CHECKBOX}
-          name='privacyConsent'
-          label='I consent to privacy policy'
+          name="privacyConsent"
+          label="I consent to privacy policy"
         />
 
-        <SubmitButton isLoading={isLoading}>
-          Get Started
-        </SubmitButton>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   )

@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { UserFormSchema } from '@/schemas/userForm.schema'
+import { UserFormSchema } from '@/schemas/user-form.schema'
 import { createUser } from '@/actions/patient.actions'
 import { FormFieldType } from '@/constants'
 import { Form } from '@/components/ui/form'
@@ -22,7 +22,11 @@ export const PatientForm = () => {
     defaultValues: { name: '', email: '', phone: '' },
   })
 
-  async function onSubmit({ name, email, phone }: z.infer<typeof UserFormSchema>) {
+  async function onSubmit({
+    name,
+    email,
+    phone,
+  }: z.infer<typeof UserFormSchema>) {
     setIsLoading(true)
 
     try {
@@ -76,9 +80,7 @@ export const PatientForm = () => {
           placeholder="(+359) 879 55 333"
         />
 
-        <SubmitButton isLoading={isLoading}>
-          Get Started
-        </SubmitButton>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   )

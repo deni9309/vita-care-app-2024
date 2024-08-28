@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { RegisterForm } from '@/components/forms/register-form'
 import { getUser } from '@/actions/patient.actions'
 
-export default async function Register({ params: { userId } }: SearchParamProps) {
+export default async function Register({
+  params: { userId },
+}: SearchParamProps) {
   const user: User = await getUser(userId)
 
   return (
@@ -20,9 +22,9 @@ export default async function Register({ params: { userId } }: SearchParamProps)
             className="mb-12 h-28 w-fit"
             priority
           />
-          
+
           <RegisterForm user={user} />
-          
+
           <p className="copyright py-12">© 2024 VitaCare</p>
         </div>
       </section>

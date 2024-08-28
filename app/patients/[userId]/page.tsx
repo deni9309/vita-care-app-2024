@@ -1,5 +1,3 @@
 export default function Patient() {
-  return (
-    <div>Patient Page</div>
-  )
+  return <div>Patient Page</div>
 }
