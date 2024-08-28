@@ -29,12 +29,14 @@ export const PatientForm = () => {
       const userData = { name, email, phone }
 
       const user = await createUser(userData)
-    
+
       if (user) {
+        setIsLoading(false)
         router.push(`/patients/${user.$id}/register`)
       }
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
     }
   }
 
@@ -42,7 +44,7 @@ export const PatientForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
         <section className="mb-12 space-y-4">
-          <h1 className="header">Welcome</h1>
+          <h1 className="header">Hi there 👋</h1>
           <p className="text-dark-700">
             Schedule your first medical appointment right away!
           </p>
@@ -71,10 +73,12 @@ export const PatientForm = () => {
           fieldType={FormFieldType.PHONE_INPUT}
           name="phone"
           label="Phone Number"
-          placeholder="(+359) 879 555 333"
+          placeholder="(+359) 879 55 333"
         />
 
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+        <SubmitButton isLoading={isLoading}>
+          Get Started
+        </SubmitButton>
       </form>
     </Form>
   )

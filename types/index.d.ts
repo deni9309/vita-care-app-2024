@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 declare interface CustomFormFieldProps {
-  control: Control<any>
+  control: Control<FieldValues>
   fieldType: FormFieldType
   inputType?: 'text' | 'password' | 'number'
   name: string
@@ -14,7 +14,7 @@ declare interface CustomFormFieldProps {
   dateFormat?: string
   showTimeSelect?: boolean
   children?: React.ReactNode
-  renderSkeleton?: (field: any) => React.ReactNode
+  renderSkeleton?: (field: ControllerRenderProps<FieldValues, string>) => React.ReactNode
 }
 
 declare type SearchParamProps = {
