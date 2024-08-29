@@ -6,14 +6,16 @@ import Image from 'next/image'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import { PatientFormSchema } from '@/schemas/patient-form.schema'
-import { createUser } from '@/actions/patient.actions'
+import { registerPatient } from '@/actions/patient.actions'
 import {
   Doctors,
   FormFieldType,
   GenderOptions,
   IdentificationTypes,
+  PatientFormDefaultValues,
 } from '@/constants'
 import { Form, FormControl, FormLabel, FormItem } from '@/components/ui/form'
 import { CustomFormField } from '@/components/custom-form-field'
@@ -23,53 +25,57 @@ import { Label } from '@/components/ui/label'
 import { SelectItem } from '@/components/ui/select'
 import { FileUploader } from '@/components/file-uploader'
 
-export const RegisterForm = ({ user }: { user: User }) => {
+export const RegisterPatientForm = ({ user }: { user: User }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof PatientFormSchema>>({
     resolver: zodResolver(PatientFormSchema),
     defaultValues: {
+      ...PatientFormDefaultValues,
       name: '',
       email: '',
       phone: '',
-      address: '',
-      privacyConsent: false,
-      birthDate: undefined,
-      gender: undefined,
-      occupation: undefined,
-      emergencyContactName: undefined,
-      emergencyContactNumber: undefined,
-      primaryPhysician: undefined,
-      insuranceProvider: undefined,
-      insurancePolicyNumber: undefined,
-      allergies: undefined,
-      currentMedication: undefined,
-      familyMedicalHistory: undefined,
-      pastMedicalHistory: undefined,
-      identificationType: undefined,
-      identificationNumber: undefined,
-      identificationDocument: undefined,
     },
   })
 
-  async function onSubmit({
-    name,
-    email,
-    phone,
-  }: z.infer<typeof PatientFormSchema>) {
+  async function onSubmit(values: z.infer<typeof PatientFormSchema>) {
     setIsLoading(true)
 
-    try {
-      const userData = { name, email, phone }
-      const user = await createUser(userData)
+    let formData
 
-      if (user) {
-        setIsLoading(false)
-        router.push(`/patients/${user.$id}/register`)
+    if (
+      values.identificationDocument &&
+      values.identificationDocument.length > 0
+    ) {
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      })
+
+      formData = new FormData()
+      formData.append('blobFile', blobFile)
+      formData.append('fileName', values.identificationDocument[0].name)
+    }
+
+    try {
+      const patientData = {
+        ...values,
+        userId: user.$id,
+        birthDate: new Date(values.birthDate),
+        identificationDocument: values.identificationDocument
+          ? formData
+          : undefined,
+      }
+
+      const patient = await registerPatient(patientData)
+
+      if (patient) {
+        toast.success('Success! Now, lets schedule your medical appointment!')
+        router.push(`/patients/${user.$id}/new-appointment`)
       }
     } catch (error) {
       console.error(error)
+      toast.error('Sorry, there has been an error. Please try again!')
       setIsLoading(false)
     }
   }
@@ -138,12 +144,12 @@ export const RegisterForm = ({ user }: { user: User }) => {
                   defaultValue={field.value}
                   className="mt-2 flex h-11 gap-6 xl:justify-between"
                 >
-                  {GenderOptions.map((option) => (
-                    <FormItem key={option} className="radio-group">
+                  {GenderOptions.map((option, i) => (
+                    <FormItem key={option + i} className="radio-group">
                       <FormControl>
-                        <RadioGroupItem value={option} />
+                        <RadioGroupItem value={option} id={option} />
                       </FormControl>
-                      <FormLabel className="!mt-0 cursor-pointer text-gray-300">
+                      <FormLabel htmlFor={option} className="capitalize !mt-0 cursor-pointer text-gray-300">
                         {option}
                       </FormLabel>
                     </FormItem>

@@ -1,7 +1,6 @@
 import Image from 'next/image'
-import Link from 'next/link'
 
-import { RegisterForm } from '@/components/forms/register-form'
+import { RegisterPatientForm } from '@/components/forms/register-patient-form'
 import { getUser } from '@/actions/patient.actions'
 
 export default async function Register({
@@ -23,7 +22,7 @@ export default async function Register({
             priority
           />
 
-          <RegisterForm user={user} />
+          <RegisterPatientForm user={user} />
 
           <p className="copyright py-12">© 2024 VitaCare</p>
         </div>

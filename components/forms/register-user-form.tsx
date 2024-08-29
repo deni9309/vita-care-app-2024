@@ -13,7 +13,7 @@ import { Form } from '@/components/ui/form'
 import { CustomFormField } from '@/components/custom-form-field'
 import { SubmitButton } from '@/components/submit-button'
 
-export const PatientForm = () => {
+export const RegisterUserForm = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 

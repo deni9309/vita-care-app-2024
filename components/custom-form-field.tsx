@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { ControllerRenderProps, FieldValues, Form } from 'react-hook-form'
+import { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { E164Number } from 'libphonenumber-js/core'
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
@@ -178,11 +178,13 @@ export const CustomFormField = (props: CustomFormFieldProps) => {
       name={name}
       render={({ field }) => (
         <FormItem className="flex-1">
-          {fieldType !== FormFieldType.CHECKBOX &&
+          {
+            fieldType !== FormFieldType.CHECKBOX &&
             fieldType !== FormFieldType.SELECT &&
             label && (
               <FormLabel className="shad-input-label">{label}</FormLabel>
-            )}
+            )
+          }
           <RenderField field={field} props={props} />
 
           <FormMessage className="shad-error" />
