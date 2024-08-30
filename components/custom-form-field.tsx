@@ -45,6 +45,7 @@ const RenderField = ({
     autocomplete,
     showTimeSelect,
     dateFormat,
+    timeFormat,
     renderSkeleton,
     children,
     disabled,
@@ -118,6 +119,7 @@ const RenderField = ({
               dateFormat={dateFormat ?? 'MM/dd/yyyy'}
               showTimeSelect={showTimeSelect ?? false}
               timeInputLabel="Time:"
+              timeFormat={timeFormat ?? 'h:mm aa'}
               wrapperClassName="date-picker"
             />
           </FormControl>

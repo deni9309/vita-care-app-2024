@@ -130,6 +130,7 @@ export const RegisterPatientForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.DATE_PICKER}
             name="birthDate"
             label="Date of Birth"
+            dateFormat='dd/MM/yyyy'
           />
           <CustomFormField
             control={form.control}
@@ -205,8 +206,8 @@ export const RegisterPatientForm = ({ user }: { user: User }) => {
           label="Primary Physician"
           placeholder="Select a physician"
         >
-          {Doctors.map((doctor) => (
-            <SelectItem key={doctor.name} value={doctor.name}>
+          {Doctors.map((doctor, i) => (
+            <SelectItem key={doctor.name + i} value={doctor.name}>
               <div className="flex cursor-pointer items-center gap-2">
                 <Image
                   src={doctor.image}

@@ -1,6 +1,6 @@
 'use server'
 
-import { ID, Query } from 'node-appwrite'
+import { AppwriteException, ID, Query } from 'node-appwrite'
 import { InputFile } from 'node-appwrite/file'
 
 import {
@@ -14,6 +14,7 @@ import {
   users,
 } from '@/lib/appwrite.config'
 import { parseStringify } from '@/lib/utils'
+import { Patient } from '@/types/appwrite.types'
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -77,4 +78,22 @@ export const registerPatient = async ({
   } catch (error) {
     console.error(error)
   }
+}
+
+export const getPatient = async (userId: string): Promise<Patient | undefined> => {
+  let patient
+
+  try {
+    const patients = await databases.listDocuments(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+      [Query.equal('userId', userId)]
+    )
+
+    patient = patients.documents[0] as Patient
+  } catch (error) {
+    console.error(error)
+  }
+
+  return parseStringify(patient)
 }

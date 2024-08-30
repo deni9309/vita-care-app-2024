@@ -12,6 +12,7 @@ declare interface CustomFormFieldProps {
   iconAlt?: string
   disabled?: boolean
   dateFormat?: string
+  timeFormat?:string
   showTimeSelect?: boolean
   children?: React.ReactNode
   renderSkeleton?: (field: ControllerRenderProps<FieldValues, string>) => React.ReactNode
