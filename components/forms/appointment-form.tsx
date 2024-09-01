@@ -11,21 +11,35 @@ import { SubmitButton } from '@/components/submit-button'
 import { Form } from '@/components/ui/form'
 import { CreateAppointmentSchema } from '@/schemas/create-appointment.schema'
 import { CustomFormField } from '@/components/custom-form-field'
-import { Doctors, FormFieldType } from '@/constants'
+import { AppointmentFormType, Doctors, FormFieldType } from '@/constants'
 import { SelectItem } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { createAppointment } from '@/actions/appointment.actions'
 
 export const AppointmentForm = ({
   type,
   userId,
   patientId,
 }: {
-  type: 'create' | 'cancel' | 'schedule',
-  userId: string,
+  type: AppointmentFormType
+  userId: string
   patientId: string
 }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+
+  let btnLabel
+  switch (type) {
+    case AppointmentFormType.CANCEL:
+      btnLabel = 'Cancel appointment'
+      break
+    case AppointmentFormType.SCHEDULE:
+      btnLabel = 'Schedule appointment'
+      break
+    default:
+      btnLabel = 'Create appointment'
+      break
+  }
 
   const form = useForm<z.infer<typeof CreateAppointmentSchema>>({
     resolver: zodResolver(CreateAppointmentSchema),
@@ -34,32 +48,49 @@ export const AppointmentForm = ({
       schedule: new Date(),
       reason: '',
       note: '',
-      cancellationReason: ''
+      cancellationReason: '',
     },
   })
-
-  let btnLabel
-  switch (type) {
-    case 'cancel':
-      btnLabel = 'Cancel appointment'; break
-    case 'schedule':
-      btnLabel = 'Schedule appointment'; break
-    default:
-      btnLabel = 'Create appointment'; break
-  }
 
   async function onSubmit(values: z.infer<typeof CreateAppointmentSchema>) {
     setIsLoading(true)
 
+    let status: Status
+    switch (type) {
+      case AppointmentFormType.SCHEDULE:
+        status = 'scheduled'
+        break
+      case AppointmentFormType.CANCEL:
+        status = 'cancelled'
+        break
+      default:
+        status = 'pending'
+        break
+    }
+
     try {
-      // const userData = { name, email, phone }
+      if (type === AppointmentFormType.CREATE && patientId) {
+        const appointmentData: CreateAppointmentParams = {
+          userId,
+          patient: patientId,
+          primaryPhysician: values.primaryPhysician,
+          schedule: new Date(values.schedule),
+          reason: values.reason,
+          note: values.note,
+          status,
+        }
 
-      // const user = await createUser(userData)
+        const appointment = await createAppointment(appointmentData)
 
-      // if (user) {
-      //   setIsLoading(false)
-      //   router.push(`/patients/${user.$id}/register`)
-      // }
+        if (appointment) {
+          setIsLoading(false)
+          form.reset()
+
+          router.push(
+            `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`,
+          )
+        }
+      }
     } catch (error) {
       console.error(error)
       setIsLoading(false)
@@ -103,11 +134,11 @@ export const AppointmentForm = ({
             <CustomFormField
               control={form.control}
               fieldType={FormFieldType.DATE_PICKER}
-              name='schedule'
-              label='Expected appointment date'
+              name="schedule"
+              label="Expected appointment date"
               showTimeSelect
-              timeFormat='HH:mm'
-              dateFormat='dd/MM/yyyy - HH:mm'
+              timeFormat="HH:mm"
+              dateFormat="dd/MM/yyyy - HH:mm"
             />
             <div className="flex flex-col gap-6 xl:flex-row">
               <CustomFormField
@@ -137,11 +168,12 @@ export const AppointmentForm = ({
             placeholder="Enter reason for cancellation..."
           />
         )}
-        
+
         <SubmitButton
           isLoading={isLoading}
-          className={cn('w-full',
-            type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn'
+          className={cn(
+            'w-full',
+            type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn',
           )}
         >
           {btnLabel}

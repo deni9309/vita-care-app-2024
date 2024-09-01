@@ -94,3 +94,9 @@ export enum FormFieldType {
   DATE_PICKER = 'datePicker',
   SKELETON = 'skeleton',
 }
+
+export enum AppointmentFormType {
+  CREATE = 'create',
+  SCHEDULE = 'schedule',
+  CANCEL = 'cancel',
+}

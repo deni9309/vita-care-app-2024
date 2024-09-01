@@ -6,7 +6,9 @@ import { getUser } from '@/actions/patient.actions'
 export default async function Register({
   params: { userId },
 }: SearchParamProps) {
-  const user: User = await getUser(userId)
+  const user: User | null = await getUser(userId)
+
+  if (!user) return
 
   return (
     <div className="flex h-screen max-h-screen">

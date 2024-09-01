@@ -1,6 +1,6 @@
 'use server'
 
-import { AppwriteException, ID, Query } from 'node-appwrite'
+import { ID, Query } from 'node-appwrite'
 import { InputFile } from 'node-appwrite/file'
 
 import {
@@ -16,7 +16,7 @@ import {
 import { parseStringify } from '@/lib/utils'
 import { Patient } from '@/types/appwrite.types'
 
-export const createUser = async (user: CreateUserParams) => {
+export const createUser = async (user: CreateUserParams): Promise<User | null> => {
   try {
     const newUser = await users.create(
       ID.unique(),
@@ -26,31 +26,35 @@ export const createUser = async (user: CreateUserParams) => {
       user.name,
     )
 
-    return parseStringify(newUser)
+    if (newUser) return parseStringify(newUser)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error && error?.code === 409) {
       const documents = await users.list([Query.equal('email', [user.email])])
 
-      return documents?.users[0]
+      return documents?.users[0] as User
     }
   }
+
+  return null
 }
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: string): Promise<User | null> => {
   try {
     const user = await users.get(userId)
 
-    return parseStringify(user)
+    if (user) return parseStringify(user)
   } catch (error) {
     console.error(error)
   }
+
+  return null
 }
 
 export const registerPatient = async ({
   identificationDocument,
   ...patient
-}: RegisterUserParams) => {
+}: RegisterUserParams): Promise<Patient | null> => {
   try {
     let file
 
@@ -74,26 +78,27 @@ export const registerPatient = async ({
       },
     )
 
-    return parseStringify(newPatient)
+    if (newPatient) return parseStringify(newPatient)
   } catch (error) {
     console.error(error)
   }
+
+  return null
 }
 
-export const getPatient = async (userId: string): Promise<Patient | undefined> => {
-  let patient
-
+export const getPatient = async (userId: string): Promise<Patient | null> => {
   try {
     const patients = await databases.listDocuments(
       DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
-      [Query.equal('userId', userId)]
+      [Query.equal('userId', userId)],
     )
 
-    patient = patients.documents[0] as Patient
+    const patient = patients?.documents[0] as Patient
+
+    if (patient) return parseStringify(patient)
   } catch (error) {
     console.error(error)
   }
-
-  return parseStringify(patient)
+  return null
 }

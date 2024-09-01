@@ -70,7 +70,9 @@ export const RegisterPatientForm = ({ user }: { user: User }) => {
       const patient = await registerPatient(patientData)
 
       if (patient) {
-        toast.success('Success! Now, lets schedule your medical appointment!')
+        toast.success(
+          '✅ Success! Now, lets schedule your medical appointment.',
+        )
         router.push(`/patients/${user.$id}/new-appointment`)
       }
     } catch (error) {
@@ -130,7 +132,7 @@ export const RegisterPatientForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.DATE_PICKER}
             name="birthDate"
             label="Date of Birth"
-            dateFormat='dd/MM/yyyy'
+            dateFormat="dd/MM/yyyy"
           />
           <CustomFormField
             control={form.control}
@@ -150,7 +152,10 @@ export const RegisterPatientForm = ({ user }: { user: User }) => {
                       <FormControl>
                         <RadioGroupItem value={option} id={option} />
                       </FormControl>
-                      <FormLabel htmlFor={option} className="capitalize !mt-0 cursor-pointer text-gray-300">
+                      <FormLabel
+                        htmlFor={option}
+                        className="!mt-0 cursor-pointer capitalize text-gray-300"
+                      >
                         {option}
                       </FormLabel>
                     </FormItem>
