@@ -16,7 +16,9 @@ import {
 import { parseStringify } from '@/lib/utils'
 import { Patient } from '@/types/appwrite.types'
 
-export const createUser = async (user: CreateUserParams): Promise<User | null> => {
+export const createUser = async (
+  user: CreateUserParams,
+): Promise<User | null> => {
   try {
     const newUser = await users.create(
       ID.unique(),

@@ -8,14 +8,16 @@ import { Button } from '@/components/ui/button'
 
 export default async function Success({
   params: { userId },
-  searchParams
+  searchParams,
 }: SearchParamProps) {
   const appointmentId = (searchParams?.appointmentId as string) || ''
   const appointment = await getAppointment(appointmentId)
 
   if (!appointment) return null
 
-  const doctor = Doctors.find(doctor => doctor.name === appointment.primaryPhysician)
+  const doctor = Doctors.find(
+    (doctor) => doctor.name === appointment.primaryPhysician,
+  )
   return (
     <div className="flex h-screen max-h-screen px-[5%]">
       <div className="success-img">
@@ -54,16 +56,16 @@ export default async function Success({
               src={doctor?.image ?? '/assets/icons/doctor-avatar.svg'}
               width={100}
               height={100}
-              alt='doctor'
+              alt="doctor"
               priority
-              className='size-11'
+              className="size-11"
             />
-            <p className='whitespace-nowrap'>Dr. {doctor?.name}</p>
+            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
           </div>
-          <div className='flex gap-2'>
+          <div className="flex gap-2">
             <Image
-              src='/assets/icons/calendar.svg'
-              alt='calendar'
+              src="/assets/icons/calendar.svg"
+              alt="calendar"
               width={24}
               height={24}
             />
@@ -71,15 +73,8 @@ export default async function Success({
           </div>
         </section>
 
-        <Button
-          variant='default'
-          className='shad-primary-btn'
-          asChild
-        >
-          <Link
-            href={`/patients/${userId}/new-appointment`}
-            prefetch
-          >
+        <Button variant="default" className="shad-primary-btn" asChild>
+          <Link href={`/patients/${userId}/new-appointment`} prefetch>
             Schedule Appointment
           </Link>
         </Button>

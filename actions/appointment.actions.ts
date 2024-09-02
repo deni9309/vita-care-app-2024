@@ -34,7 +34,9 @@ export const createAppointment = async (
   return null
 }
 
-export const getAppointment = async (appointmentId: string): Promise<Appointment | null> => {
+export const getAppointment = async (
+  appointmentId: string,
+): Promise<Appointment | null> => {
   try {
     const appointment = await databases.getDocument(
       DATABASE_ID!,
