@@ -12,7 +12,7 @@ declare interface CustomFormFieldProps {
   iconAlt?: string
   disabled?: boolean
   dateFormat?: string
-  timeFormat?:string
+  timeFormat?: string
   showTimeSelect?: boolean
   children?: React.ReactNode
   renderSkeleton?: (field: ControllerRenderProps<FieldValues, string>) => React.ReactNode
@@ -73,4 +73,12 @@ declare type UpdateAppointmentParams = {
   timeZone: string
   appointment: Appointment
   type: string
+}
+
+declare type AppointmentList = {
+  documents: Appointment[]
+  scheduledCount: number
+  pendingCount: number
+  cancelledCount: number
+  totalCount: number
 }
