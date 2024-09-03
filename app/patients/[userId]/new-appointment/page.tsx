@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 import { AppointmentForm } from '@/components/forms/appointment-form'
 import { getPatient } from '@/actions/patient.actions'
-import { AppointmentFormType } from '@/constants'
+import { AppointmentStatusType } from '@/constants'
 
 export default async function NewAppointment({
   params: { userId },
@@ -24,7 +24,7 @@ export default async function NewAppointment({
           />
 
           <AppointmentForm
-            type={AppointmentFormType.CREATE}
+            type={AppointmentStatusType.CREATE}
             userId={userId}
             patientId={patient.$id}
           />

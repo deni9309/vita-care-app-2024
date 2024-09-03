@@ -95,7 +95,7 @@ export enum FormFieldType {
   SKELETON = 'skeleton',
 }
 
-export enum AppointmentFormType {
+export enum AppointmentStatusType {
   CREATE = 'create',
   SCHEDULE = 'schedule',
   CANCEL = 'cancel',

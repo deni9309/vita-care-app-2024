@@ -1,81 +1,91 @@
 'use client'
 
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import {
+  createAppointment,
+  updateAppointment,
+} from '@/actions/appointment.actions'
+import { Appointment } from '@/types/appwrite.types'
+import { getAppointmentSchema } from '@/schemas/appointment.schemas'
+import { AppointmentStatusType, Doctors, FormFieldType } from '@/constants'
+import { cn } from '@/lib/utils'
 import { SubmitButton } from '@/components/submit-button'
 import { Form } from '@/components/ui/form'
-import { CreateAppointmentSchema } from '@/schemas/create-appointment.schema'
 import { CustomFormField } from '@/components/custom-form-field'
-import { AppointmentFormType, Doctors, FormFieldType } from '@/constants'
 import { SelectItem } from '@/components/ui/select'
-import { cn } from '@/lib/utils'
-import { createAppointment } from '@/actions/appointment.actions'
 
 export const AppointmentForm = ({
-  type,
+  type = AppointmentStatusType.CREATE,
   userId,
   patientId,
+  appointment,
+  setOpen,
 }: {
-  type: AppointmentFormType
+  type: AppointmentStatusType
   userId: string
   patientId: string
+  appointment?: Appointment
+  setOpen?: Dispatch<SetStateAction<boolean>>
 }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
+  const AppointmentFormSchema = getAppointmentSchema(type)
+
   let btnLabel
   switch (type) {
-    case AppointmentFormType.CANCEL:
+    case AppointmentStatusType.CANCEL:
       btnLabel = 'Cancel appointment'
       break
-    case AppointmentFormType.SCHEDULE:
+    case AppointmentStatusType.SCHEDULE:
       btnLabel = 'Schedule appointment'
       break
     default:
       btnLabel = 'Create appointment'
-      break
   }
 
-  const form = useForm<z.infer<typeof CreateAppointmentSchema>>({
-    resolver: zodResolver(CreateAppointmentSchema),
+  const form = useForm<z.infer<typeof AppointmentFormSchema>>({
+    resolver: zodResolver(AppointmentFormSchema),
     defaultValues: {
-      primaryPhysician: '',
-      schedule: new Date(),
-      reason: '',
-      note: '',
-      cancellationReason: '',
+      primaryPhysician: appointment ? appointment.primaryPhysician : '',
+      schedule: appointment
+        ? new Date(appointment.schedule)
+        : new Date(Date.now()),
+      reason: appointment?.reason || '',
+      note: appointment?.note || '',
+      cancellationReason: appointment?.cancellationReason || '',
     },
   })
 
-  async function onSubmit(values: z.infer<typeof CreateAppointmentSchema>) {
+  async function onSubmit(values: z.infer<typeof AppointmentFormSchema>) {
     setIsLoading(true)
 
     let status: Status
     switch (type) {
-      case AppointmentFormType.SCHEDULE:
+      case AppointmentStatusType.SCHEDULE:
         status = 'scheduled'
         break
-      case AppointmentFormType.CANCEL:
+      case AppointmentStatusType.CANCEL:
         status = 'cancelled'
         break
       default:
         status = 'pending'
-        break
     }
 
     try {
-      if (type === AppointmentFormType.CREATE && patientId) {
+      if (type === AppointmentStatusType.CREATE && patientId) {
         const appointmentData: CreateAppointmentParams = {
           userId,
           patient: patientId,
           primaryPhysician: values.primaryPhysician,
           schedule: new Date(values.schedule),
-          reason: values.reason,
+          reason: values.reason!,
           note: values.note,
           status,
         }
@@ -90,24 +100,52 @@ export const AppointmentForm = ({
             `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`,
           )
         }
+      } else {
+        if (!appointment) {
+          setIsLoading(false)
+          return
+        }
+
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment.$id,
+          appointment: {
+            primaryPhysician: values.primaryPhysician,
+            schedule: new Date(values.schedule),
+            status,
+            cancellationReason: values.cancellationReason,
+          },
+          type,
+        }
+
+        const updatedAppointment = await updateAppointment(appointmentToUpdate)
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false)
+          form.reset()
+        }
       }
     } catch (error) {
       console.error(error)
       setIsLoading(false)
     }
+
+    setIsLoading(false)
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
-        <section className="mb-12 space-y-4">
-          <h1 className="header">New Appointment</h1>
-          <p className="text-dark-700">
-            Request a new appointment in 10 seconds!
-          </p>
-        </section>
+        {type === AppointmentStatusType.CREATE && (
+          <section className="mb-12 space-y-4">
+            <h1 className="header">New Appointment</h1>
+            <p className="text-dark-700">
+              Request a new appointment in 10 seconds!
+            </p>
+          </section>
+        )}
 
-        {type === 'create' && (
+        {type !== AppointmentStatusType.CANCEL && (
           <>
             <CustomFormField
               control={form.control}
@@ -159,7 +197,7 @@ export const AppointmentForm = ({
           </>
         )}
 
-        {type === 'cancel' && (
+        {type === AppointmentStatusType.CANCEL && (
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.TEXTAREA}
@@ -173,7 +211,9 @@ export const AppointmentForm = ({
           isLoading={isLoading}
           className={cn(
             'w-full',
-            type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn',
+            type === AppointmentStatusType.CANCEL
+              ? 'shad-danger-btn'
+              : 'shad-primary-btn',
           )}
         >
           {btnLabel}
