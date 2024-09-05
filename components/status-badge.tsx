@@ -19,7 +19,7 @@ export const StatusBadge = ({ status }: { status: Status }) => {
         className="h-fit w-3"
       />
       <p
-        className={cn('text-12-semibold capitalize', {
+        className={cn('text-[12px] font-bold tracking-wider capitalize', {
           'text-green-400': status === 'scheduled',
           'text-blue-400': status === 'pending',
           'text-red-400': status === 'cancelled',
