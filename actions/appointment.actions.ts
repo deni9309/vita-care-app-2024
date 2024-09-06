@@ -1,15 +1,17 @@
 'use server'
 
-import { ID, Query } from 'node-appwrite'
+import { ID, Models, Query } from 'node-appwrite'
+import { revalidatePath } from 'next/cache'
 
 import {
   DATABASE_ID,
   databases,
   APPOINTMENT_COLLECTION_ID,
+  messaging,
 } from '@/lib/appwrite.config'
-import { parseStringify } from '@/lib/utils'
+import { formatDateTime, parseStringify } from '@/lib/utils'
 import { Appointment } from '@/types/appwrite.types'
-import { revalidatePath } from 'next/cache'
+import { AppointmentStatusType } from '@/constants'
 
 export const createAppointment = async (
   appointment: CreateAppointmentParams,
@@ -94,10 +96,8 @@ export const getRecentAppointmentList =
 
 export const updateAppointment = async ({
   appointmentId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   appointment,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type,
 }: UpdateAppointmentParams): Promise<Appointment | null> => {
   try {
@@ -112,11 +112,40 @@ export const updateAppointment = async ({
       throw new Error('Error! Appointment update failed.')
     }
 
-    //TODO SMS notification
+    const smsMessage = `
+    Thank you for choosing VitaCare!
+    
+    ${
+      type === AppointmentStatusType.SCHEDULE
+        ? ` Your appointment has been scheduled for ${formatDateTime(appointment?.schedule).dateTime} with Dr. ${appointment.primaryPhysician}`
+        : ` We regret to inform you that your appointment has been cancelled. Reason for cancellation: ${appointment.cancellationReason}`
+    }`
+
+    await sendSmsNotification(userId, smsMessage)
 
     revalidatePath('/admin')
 
     return parseStringify(updatedAppointment)
+  } catch (error) {
+    console.error(error)
+  }
+
+  return null
+}
+
+export const sendSmsNotification = async (
+  userId: string,
+  content: string,
+): Promise<Models.Message | null> => {
+  try {
+    const message = await messaging.createSms(
+      ID.unique(),
+      content,
+      [],
+      [userId],
+    )
+
+    if (message) return parseStringify(message)
   } catch (error) {
     console.error(error)
   }

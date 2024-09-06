@@ -37,19 +37,19 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="data-table">
-      <Table className='shad-table'>
-        <TableHeader className='bg-dark-200'>
+      <Table className="shad-table">
+        <TableHeader className="bg-dark-200">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className='shad-table-row-header'>
+            <TableRow key={headerGroup.id} className="shad-table-row-header">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
                 )
               })}
@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
-                className='shad-table-row'
+                className="shad-table-row"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -80,38 +80,38 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className='table-actions'>
+      <div className="table-actions">
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className='shad-gray-btn'
+          className="shad-gray-btn"
         >
           <Image
-            src='/assets/icons/arrow.svg'
-            alt='previous'
+            src="/assets/icons/arrow.svg"
+            alt="previous"
             width={24}
             height={24}
-            role='button'
-            title='Previous'
+            role="button"
+            title="Previous"
           />
         </Button>
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className='shad-gray-btn'
+          className="shad-gray-btn"
         >
           <Image
-            src='/assets/icons/arrow.svg'
-            alt='next'
+            src="/assets/icons/arrow.svg"
+            alt="next"
             width={24}
             height={24}
-            className='rotate-180'
-            role='button'
-            title='Next'
+            className="rotate-180"
+            role="button"
+            title="Next"
           />
         </Button>
       </div>
